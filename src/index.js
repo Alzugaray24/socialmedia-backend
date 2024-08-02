@@ -7,8 +7,8 @@ const app = express();
 const PORT = 8080;
 
 const corsOptions = {
-  origin: "*", // Permitir todas las orígenes. Cambia esto para restringir a dominios específicos.
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Métodos permitidos
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
@@ -18,10 +18,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", authRouter);
-
-app.get("/", (req, res) => {
-  res.json({ message: "Hola Mundo" });
-});
 
 MongoSingleton.getInstance();
 
