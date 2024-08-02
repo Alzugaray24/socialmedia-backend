@@ -47,7 +47,6 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    console.log("entre aca");
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -61,6 +60,7 @@ const loginUser = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
     if (!isMatch) {
       throw new CustomError({
         message: "Credenciales inválidas",
@@ -79,8 +79,15 @@ const loginUser = async (req, res) => {
     return res.status(200).json({
       message: "Inicio de sesión exitoso",
       token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        age: user.age,
+      },
     });
   } catch (error) {
+    console.log(error.message);
     if (error instanceof CustomError) {
       return res.status(error.code).json({ message: error.message });
     }
