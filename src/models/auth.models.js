@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     required: [true, "Name is required"],
     trim: true,
   },
+  lastName: {
+    type: String,
+    required: [true, "Last name is required"],
+    trim: true,
+  },
   age: {
     type: Number,
     min: [0, "Age cannot be negative"],
@@ -33,6 +38,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
     enum: ["user", "admin"],
+  },
+  profileImage: {
+    type: String,
+    default: "",
   },
   last_connection: {
     type: Date,

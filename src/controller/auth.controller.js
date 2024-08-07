@@ -11,7 +11,7 @@ const authService = new AuthService();
 
 const registerUser = async (req, res) => {
   try {
-    const { email, name, age, password, role } = req.body;
+    const { email, lastName, name, age, password, role } = req.body;
 
     const existingUser = await authService.findUser(email);
     if (existingUser) {
@@ -31,6 +31,7 @@ const registerUser = async (req, res) => {
       age,
       password: hashedPassword,
       role,
+      lastName,
     };
 
     const savedUser = await authService.saveUser(newUser);
@@ -85,6 +86,7 @@ const loginUser = async (req, res) => {
         email: user.email,
         name: user.name,
         age: user.age,
+        lastName: user.lastName,
       },
     });
   } catch (error) {

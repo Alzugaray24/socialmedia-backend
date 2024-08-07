@@ -1,6 +1,31 @@
-export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+
+export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
+
+// Obtener __dirname en ES6
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
+
+export const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadsDir = path.join(__dirname, "../public/uploads"); // Combina __dirname con 'uploads'
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir);
+    }
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 export const hashPassword = async (password) => {
   try {

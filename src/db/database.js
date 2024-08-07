@@ -4,9 +4,12 @@ export default class MongoSingleton {
   static #instance;
 
   constructor() {
-    mongoose.connect("mongodb://localhost:27017/", {
-      dbName: "socialmedia",
-    });
+    mongoose.connect(
+      "mongodb+srv://CoderUser:QPPlb4bmNN9gkQKk@codercluster.tnznf0l.mongodb.net/CoderCluster?retryWrites=true&w=majority",
+      {
+        dbName: "socialmedia",
+      }
+    );
   }
 
   static getInstance() {
