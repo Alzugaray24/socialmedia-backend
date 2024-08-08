@@ -28,10 +28,12 @@ const registerUser = async (req, res) => {
     const newUser = {
       email,
       name,
+      lastName,
       age,
       password: hashedPassword,
       role,
-      lastName,
+      profileImage: "",
+      images: [],
     };
 
     const savedUser = await authService.saveUser(newUser);

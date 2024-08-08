@@ -2,10 +2,11 @@ import { uploadImage } from "../utils/CloudinaryUtils.js";
 import { AuthService } from "../services/auth.service.js";
 import CustomError from "../services/error.custom.class.js";
 import Image from "../models/images.models.js";
+import { getImageUrlsByIds } from "../utils/utils.js";
 
 const authService = new AuthService();
 
-export const addProfileImg = async (req, res) => {
+export const addImage = async (req, res) => {
   try {
     const { id, image } = req.body;
 
@@ -13,7 +14,7 @@ export const addProfileImg = async (req, res) => {
       throw new CustomError({
         message: "Imagen y ID de usuario son requeridos",
         code: 400,
-        origin: "addProfileImg",
+        origin: "addImage",
         isCustom: true,
       });
     }
@@ -23,13 +24,13 @@ export const addProfileImg = async (req, res) => {
       throw new CustomError({
         message: "Formato de imagen no válido",
         code: 400,
-        origin: "addProfileImg",
+        origin: "addImage",
         isCustom: true,
       });
     }
 
     const base64Data = image.replace(/^data:image\/[a-zA-Z]+;base64,/, "");
-    const publicId = `user-profile/${id}`;
+    const publicId = `user-posts/${id}/${Date.now()}`;
 
     const uploadResult = await uploadImage(
       `data:image/jpeg;base64,${base64Data}`,
@@ -42,17 +43,27 @@ export const addProfileImg = async (req, res) => {
       throw new CustomError({
         message: "Usuario no encontrado",
         code: 404,
-        origin: "addProfileImg",
+        origin: "addImage",
         isCustom: true,
       });
     }
 
-    const updatedUser = await authService.findUserAndUpdate(id, {
-      profileImage: optimizedUrl,
+    // Crear y guardar la imagen en la colección de imágenes
+    const newImage = new Image({
+      url: optimizedUrl,
     });
+    await newImage.save();
+
+    console.log(newImage._id);
+
+    // Pushear el ObjectId de la nueva imagen al arreglo de imágenes del usuario
+    user.images.push(newImage._id);
+    const updatedUser = await user.save();
+
+    console.log("se pudo");
 
     res.status(200).json({
-      message: "Imagen actualizada exitosamente",
+      message: "Imagen subida y agregada exitosamente",
       user: updatedUser,
       image: optimizedUrl,
     });
@@ -61,45 +72,37 @@ export const addProfileImg = async (req, res) => {
       return res.status(error.code).json({ message: error.message });
     }
 
-    console.error("Error al actualizar la imagen:", error.message);
+    console.error("Error al agregar la imagen:", error.message);
     res.status(500).json({
-      message: "Error al actualizar la imagen",
+      message: "Error al agregar la imagen",
     });
   }
 };
 
-export const getImageById = async (req, res) => {
+export const getAllUserImages = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
-
     const user = await authService.findUserById(id);
+
     if (!user) {
-      throw new CustomError({
+      return res.status(404).json({
         message: "Usuario no encontrado",
-        code: 404,
-        origin: "getImageById",
+        origin: "getAllUserImages",
         isCustom: true,
       });
     }
 
-    if (!user.profileImage) {
-      throw new CustomError({
-        message: "Imagen no encontrada",
-        code: 404,
-        origin: "getImageById",
-        isCustom: true,
-      });
-    }
+    const imageUrls = await getImageUrlsByIds(user.images); // Obtener URLs usando los IDs de imágenes
 
-    res.status(200).json({ image: user.profileImage });
+    console.log(imageUrls);
+    res.status(200).json(imageUrls); // Enviar las URLs en la respuesta
   } catch (error) {
-    if (error instanceof CustomError) {
-      return res.status(error.code).json({ message: error.message });
-    }
-
-    console.error("Error al obtener la imagen:", error.message);
     res.status(500).json({
-      message: "Error al obtener la imagen",
+      message: "Error al obtener las imágenes del usuario",
+      origin: "getAllUserImages",
+      isCustom: true,
+      error: error.message,
     });
   }
 };

@@ -4,6 +4,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import Image from "../models/images.models.js";
 
 export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
 
@@ -60,4 +61,18 @@ export const generateToken = (user, privateKey, expiresIn = "1h") => {
     console.error("Error al generar el token JWT:", error.message);
     throw new Error("Error al generar el token.");
   }
+};
+
+export const getImageUrlsByIds = async (imageIds) => {
+  console.log("entre");
+  const imageUrls = await Promise.all(
+    imageIds.map(async (id) => {
+      const image = await Image.findById(id);
+      return image.url;
+    })
+  );
+
+  console.log(imageUrls);
+
+  return imageUrls;
 };

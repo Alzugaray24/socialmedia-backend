@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  images: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "images",
+    },
+  ],
   last_connection: {
     type: Date,
     default: Date.now,

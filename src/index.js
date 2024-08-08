@@ -3,6 +3,7 @@ import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
 import MongoSingleton from "./db/database.js";
 import userRouter from "./routes/user.router.js";
+import imageRouter from "./routes/image.routes.js";
 
 const app = express();
 const PORT = 8080;
@@ -14,15 +15,15 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-// Ajusta el límite de tamaño para las solicitudes JSON y urlencoded
-const MAX_REQUEST_SIZE = "10mb"; // Ajusta el límite según tus necesidades
+const MAX_REQUEST_SIZE = "10mb";
 
 app.use(cors(corsOptions));
-app.use(express.json({ limit: MAX_REQUEST_SIZE })); // Ajusta el límite para solicitudes JSON
-app.use(express.urlencoded({ limit: MAX_REQUEST_SIZE, extended: true })); // Ajusta el límite para solicitudes URL-encoded
+app.use(express.json({ limit: MAX_REQUEST_SIZE }));
+app.use(express.urlencoded({ limit: MAX_REQUEST_SIZE, extended: true }));
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/images", imageRouter);
 
 MongoSingleton.getInstance();
 
