@@ -30,4 +30,7 @@ export default {
   mongodbConnection: process.env.MONGODB_CONNECTION,
   privateKey: process.env.PRIVATE_KEY,
   dbName: process.env.DB_NAME,
+  authRoute: process.env.AUTH_ROUTE,
+  imageRoute: process.env.IMAGES_ROUTE,
+  userRoute: process.env.USER_ROUTE,
 };

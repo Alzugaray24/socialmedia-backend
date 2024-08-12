@@ -8,8 +8,6 @@ import config from "./config/config.js";
 
 const app = express();
 
-console.log(config);
-
 const corsOptions = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -23,9 +21,9 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: MAX_REQUEST_SIZE }));
 app.use(express.urlencoded({ limit: MAX_REQUEST_SIZE, extended: true }));
 
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
-app.use("/api/images", imageRouter);
+app.use(config.authRoute, authRouter);
+app.use(config.userRoute, userRouter);
+app.use(config.imageRoute, imageRouter);
 
 MongoSingleton.getInstance();
 
