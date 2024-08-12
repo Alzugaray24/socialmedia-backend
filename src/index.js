@@ -8,6 +8,8 @@ import config from "./config/config.js";
 
 const app = express();
 
+console.log(config);
+
 const corsOptions = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",

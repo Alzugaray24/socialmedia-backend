@@ -14,7 +14,7 @@ let envFilePath;
 
 switch (mode) {
   case "dev":
-    envFilePath = path.resolve(__dirname, "../../.env.development");
+    envFilePath = path.resolve(__dirname, "../.env.development");
     break;
   default:
     throw new Error("Invalid mode specified");
