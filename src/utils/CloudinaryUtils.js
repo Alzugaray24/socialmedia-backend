@@ -1,12 +1,13 @@
 // src/utils/cloudinaryUtils.js
 
 import { v2 as cloudinary } from "cloudinary";
+import config from "../config/config.js";
 
 // Configuración de Cloudinary
 cloudinary.config({
-  cloud_name: "dhmw3jd5q",
-  api_key: "544944762894639",
-  api_secret: "sNEhY2-sqbM3KKhjCkt3kTEfxlM",
+  cloud_name: config.cloudName,
+  api_key: config.apiKey,
+  api_secret: config.apiSecret,
 });
 
 /**
@@ -38,4 +39,21 @@ export const getOptimizedUrl = (publicId) => {
     fetch_format: "auto",
     quality: "auto",
   });
+};
+
+/**
+ * Elimina una imagen de Cloudinary.
+ * @param {string} publicId - El ID público de la imagen a eliminar.
+ * @returns {Promise<object>} - Resultado de la eliminación.
+ */
+export const deleteImageFromCloud = async (publicId) => {
+  try {
+    const deleteResult = await cloudinary.uploader.destroy(publicId, {
+      resource_type: "image",
+    });
+    return deleteResult;
+  } catch (error) {
+    console.error("Error deleting image:", error);
+    throw error;
+  }
 };

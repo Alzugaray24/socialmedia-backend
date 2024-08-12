@@ -10,6 +10,10 @@ const imageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  publicId: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     default: "",
@@ -20,7 +24,6 @@ const imageSchema = new mongoose.Schema({
   },
 });
 
-// Aplicar el plugin de paginación
 imageSchema.plugin(mongoosePaginate);
 
 export default mongoose.model(collection, imageSchema);

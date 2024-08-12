@@ -4,9 +4,9 @@ import authRouter from "./routes/auth.routes.js";
 import MongoSingleton from "./db/database.js";
 import userRouter from "./routes/user.router.js";
 import imageRouter from "./routes/image.routes.js";
+import config from "./config/config.js";
 
 const app = express();
-const PORT = 8080;
 
 const corsOptions = {
   origin: "*",
@@ -27,6 +27,6 @@ app.use("/api/images", imageRouter);
 
 MongoSingleton.getInstance();
 
-app.listen(PORT, () => {
-  console.log(`Servidor activo en el puerto ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`Servidor activo en el puerto ${config.port}`);
 });

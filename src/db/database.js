@@ -1,15 +1,13 @@
 import mongoose from "mongoose";
+import config from "../config/config.js";
 
 export default class MongoSingleton {
   static #instance;
 
   constructor() {
-    mongoose.connect(
-      "mongodb+srv://CoderUser:QPPlb4bmNN9gkQKk@codercluster.tnznf0l.mongodb.net/CoderCluster?retryWrites=true&w=majority",
-      {
-        dbName: "socialmedia",
-      }
-    );
+    mongoose.connect(config.mongodbConnection, {
+      dbName: config.dbName,
+    });
   }
 
   static getInstance() {

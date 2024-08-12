@@ -10,4 +10,12 @@ export class UserService {
       throw new Error(err.message);
     }
   }
+
+  async findById(id) {
+    try {
+      return await User.findOne({ _id: id });
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
 }

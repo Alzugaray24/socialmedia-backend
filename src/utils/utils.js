@@ -5,12 +5,13 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import Image from "../models/images.models.js";
-
-export const PRIVATE_KEY = "CoderhouseBackendCourseSecretKeyJWT";
+import config from "../config/config.js";
 
 // Obtener __dirname en ES6
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
+
+export const PRIVATE_KEY = config.privateKey;
 
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -64,15 +65,17 @@ export const generateToken = (user, privateKey, expiresIn = "1h") => {
 };
 
 export const getImageUrlsByIds = async (imageIds) => {
-  console.log("entre");
-  const imageUrls = await Promise.all(
-    imageIds.map(async (id) => {
-      const image = await Image.findById(id);
-      return image.url;
-    })
-  );
-
-  console.log(imageUrls);
-
-  return imageUrls;
+  try {
+    const images = await Image.find({ _id: { $in: imageIds } });
+    const imageUrls = images.map((image) => ({
+      _id: image._id,
+      url: image.url,
+      description: image.description,
+      publicId: image.publicId,
+    }));
+    return imageUrls;
+  } catch (error) {
+    console.error("Error fetching images:", error);
+    throw new Error("Failed to fetch images");
+  }
 };
